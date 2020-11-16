@@ -1,0 +1,306 @@
+/* Общее */
+body, html {
+    height: 100%;
+}
+
+body {
+    background-color: #f8f8f8;
+}
+
+h1,
+h2,
+h3 {
+    text-align: center;
+    background-color: #cfb8ff;
+    padding: 10px;
+    margin: 20px 0 20px;
+}
+
+.container {
+    height: 100%;
+    max-width: 800px;
+    min-width: 360px;
+    /*margin: 0 auto;*/
+}
+
+.header {
+    /*position: relative;*/
+    background-color: #b2b2b2;
+    background-image: url(../img/fon.jpg);
+    border-bottom: 2px solid black;
+}
+
+.header .logo-text {
+    font-weight: 700;
+    background-color: beige;
+    border-radius: 5px;
+    padding: 0 20px;
+}
+
+.content {
+    background-color: #E1E0E1;
+    min-height: 100%;
+}
+
+#pull {
+    height: 100px;
+}
+
+/* меню сайта */
+.nav-item {
+    font-style: italic;
+    font-size: 1.3em;
+    list-style-type: none;
+}
+
+.nav-link {
+    display: block;
+    height: 100%;
+    width: 100%;
+    color: #8B00FF;
+    background-color: #d6d6d6;
+}
+
+.nav-item.active{
+    border-bottom: 3px solid red;
+}
+
+.nav-link:hover,
+.nav-link:active {
+    color: white;
+    background-color: #8B00FF;
+}
+
+.navbar-toggler {
+    background-color: beige;
+    color: red;
+}
+
+.greeting::first-letter {
+    color: red;
+    font-size: 1.5em;
+}
+
+.greeting {
+    margin: 4% 0;
+    text-indent: 8%;
+    font-size: 1.5em;
+    padding: 0 2%;
+}
+
+/* Карточка товара */
+
+p.karto4ka_tovara:first-letter {
+    text-transform: uppercase;
+    color: red;
+    font-size: 1.5em;
+}
+
+p.karto4ka_tovara {
+    text-indent: 5%;
+}
+
+h3.karto4ka_tovara {
+    color: white;
+    font-size: 1.3em;
+    font-weight: 400;
+    background-color: #348200;
+    padding: 10px;
+    margin: 20px 0 15px;
+}
+
+.karto4ka_tovara_desc_short {
+    color: #707070;
+    font-size: 14px;
+    font-style: italic;
+    line-height: 16px;
+}
+
+.karto4ka_tovara_desc_full {
+    color: #484343;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    text-align: left;
+}
+
+.karto4ka_tovara_img_thumb {
+    float: left;
+    margin: 0 20px 10px 20px;
+    width: 150px;
+    background-color: #484343;
+    padding: 2px;
+    border-radius: 8px;
+}
+
+.karto4ka_tovara_img_thumb:hover {
+    background-color: white;
+}
+
+table.tbl_harakteristiki {
+    border-collapse: collapse;
+}
+
+table.tbl_harakteristiki tr:first-child {
+    line-height: 30px;
+}
+
+table.tbl_harakteristiki td {
+    border: 1px solid #000;
+    padding: 5px;
+}
+
+.cena_tovara {
+    font-size: 1.5em;
+}
+
+.cena_tovara .summa {
+    font-size: 1.8em;    
+}
+
+.btn_kupit {
+    margin-left: 50px;
+    padding: 10px;
+    width: 150px;
+    font-size: 2em;
+    border-radius: 8px;
+    background-color: #d89d00;
+    color: white;
+}
+
+.btn_kupit:hover {
+    background-color: #00da00;
+    padding: 10px 15px;
+}
+
+.btn_kupit:active {
+    background-color: #3aff3a;
+    color: #484343;
+}
+
+
+/* Каталог товаров */
+.tovar_list {
+    padding: 0;
+    list-style-type: none;
+}
+
+.tovar_list > div {
+    margin: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    /*transition: width 0.5s linear, height 0.5s linear;*/
+    transition: all .2s ease-in-out;
+}
+
+.tovar_list > div:hover {
+    transform: scale(1.05);
+}
+
+.card {
+    width: 18rem;
+}
+
+/* Контакты */
+
+fieldset {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.input_field {
+    display: flex;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.input_field span {
+    width: 100px;
+}
+
+.input_field input {
+    width: 100%;
+    color: #707070;
+}
+
+.input_field input,
+textarea {
+    text-transform: capitalize;
+}
+
+textarea {
+    width: 100%;
+    color: #707070;
+}
+
+input[type="email"]:focus {
+    background-color: #707070;
+    color: white;
+}
+
+input[type=submit] {
+    background-color: #8B00FF;   
+    color:white;
+    padding: 5px;
+}
+
+input[type=reset] {
+    padding: 5px;
+}
+
+.karta {
+    height: 374px;
+    width: 100%;
+}
+
+.addr {
+    padding-left: 20px;
+    margin: 5px 0;
+}
+
+.addr img {
+    width: 24px;
+    vertical-align: middle;
+    padding-right: 10px;
+}
+/* Футер */
+
+.footer {
+    border-top: 2px solid black;
+    margin-top: -100px;
+    background-color: #b2b2b2;
+    height: 100px;
+}
+
+.footer p {
+    margin: 0;
+    text-align: right;
+    padding-right: 20px;
+    padding-top: 10px;
+    color: black;
+}
+
+@media screen and (max-width: 768px) {
+    .nav-link {
+        text-indent: 20px;
+    }
+
+    .card-img-top {
+        width: auto;
+    }
+
+    .card {
+        flex-direction: row;
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .card-img-top {
+        width: 100%;
+    }
+
+    .card {
+        width: 18rem;
+        flex-direction: column;
+    }
+}
