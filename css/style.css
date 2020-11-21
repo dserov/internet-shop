@@ -190,6 +190,7 @@ table.tbl_harakteristiki td {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     /*transition: width 0.5s linear, height 0.5s linear;*/
     transition: all .2s ease-in-out;
+    padding: 10px;
 }
 
 .tovar_list > div:hover {
@@ -277,6 +278,32 @@ input[type=reset] {
     padding-right: 20px;
     padding-top: 10px;
     color: black;
+}
+
+.user_panel {
+    color: #8B00FF;
+    background-color: #d6d6d6;
+    display: flex;
+    justify-content: space-between;
+}
+
+.photo-gallery {
+    display: flex;
+    flex-flow: wrap row;
+}
+
+.reviews-table {
+    border: 1px solid black;
+}
+.reviews-table th, .reviews-table td {
+    border: 1px solid black;
+}
+.reviews-table tr:nth-child(even) {
+    border: 1px solid red;
+}
+
+.feedback-actions__panel {
+    display: flex;
 }
 
 @media screen and (max-width: 768px) {
