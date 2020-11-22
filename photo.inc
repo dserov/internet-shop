@@ -7,7 +7,7 @@ $uploadDir = 'foto' . DIRECTORY_SEPARATOR;
 
 $productId = isset($_GET['product_id']) ? $_GET['product_id'] : null;
 
-$product = DB::getInstance()->QueryOne("SELECT * FROM products WHERE id=?", $productId);
+$product = DB::getInstance()->QueryOne("SELECT * FROM goods WHERE id=?", $productId);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_FILES) {
     processFiles($productId, $uploadDir, $errors);

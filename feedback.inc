@@ -5,12 +5,12 @@ $errors = [];
 
 $feedback = [];
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $errors[] = doFeedBackAction($feedback);
+    $errors[] = doGoodsItemAction($feedback);
 }
 
 // вывод уже имеющихся записей
 try {
-    $rows = DB::getInstance()->QueryMany("SELECT * FROM reviews order by create_date desc");
+    $rows = DB::getInstance()->QueryMany("SELECT * FROM feedbacks order by create_date desc");
 } catch (Exception $e) {
     $error[] = $e->getMessage();
 }
@@ -26,7 +26,7 @@ function doFeedBackAction(&$feedback)
 
         if ($feedback['action'] == 'add') {
             // add new feedback
-            feedbackAdd($feedback);
+            goodsItemAdd($feedback);
             if (!$error) {
                 // сделаем редирект, чтоб не добавить еще один отзыв при простом обновлении страницы
                 header("Location: " . $_SERVER['REQUEST_URI']);
@@ -41,7 +41,7 @@ function doFeedBackAction(&$feedback)
         }
 
         if ($feedback['action'] == 'delete') {
-            feedbackDelete($feedback);
+            goodsItemDelete($feedback);
         }
         if ($feedback['action'] == 'update') {
             feedbackUpdate($feedback);
@@ -50,7 +50,7 @@ function doFeedBackAction(&$feedback)
 
         // переход в режим редактирования
         if ($feedback['action'] == 'edit') {
-            $feedback = DB::getInstance()->QueryOne("select * from reviews where id=? limit 1", $feedback['id']);
+            $feedback = DB::getInstance()->QueryOne("select * from feedbacks where id=? limit 1", $feedback['id']);
             if (!$feedback)
                 throw new Exception('Отзыв не найден');
             $feedback['action'] = 'edit';
@@ -75,7 +75,7 @@ function feedbackUpdate($feedback)
         throw new Exception('Не верно заполнены поля формы');
 
     // "очищать" входные данные не будем, пусть этим БД займется при выполнении запросов
-    DB::getInstance()->QueryOne("update reviews set `author`=?, `text`=?, create_date=now() where id=?",
+    DB::getInstance()->QueryOne("update feedbacks set `author`=?, `text`=?, create_date=now() where id=?",
         $feedback['author'], $feedback['text'], $feedback['id']);
 }
 
@@ -92,11 +92,11 @@ function feedbackAdd($feedback)
         throw new Exception('Не верно заполнены поля формы');
 
     // "очищать" входные данные не будем, пусть этим БД займется при выполнении запросов
-    $row = DB::getInstance()->QueryOne("select * from reviews where `author`=? and `text`=?", $feedback['author'], $feedback['text']);
+    $row = DB::getInstance()->QueryOne("select * from feedbacks where `author`=? and `text`=?", $feedback['author'], $feedback['text']);
     if ($row)
         throw new Exception('Такой отзыв уже есть! Перестаньте обновлять страницу))');
 
-    DB::getInstance()->QueryOne("insert into reviews (`author`, `text`) values (?,?)", $feedback['author'], $feedback['text']);
+    DB::getInstance()->QueryOne("insert into feedbacks (`author`, `text`) values (?,?)", $feedback['author'], $feedback['text']);
 }
 
 /**
@@ -110,14 +110,14 @@ function feedbackDelete($feedback)
     if (!$feedback['id'])
         throw new Exception('Код удаляемого отзыва не задан');
 
-    DB::getInstance()->QueryOne("delete from reviews where id=? limit 1", $feedback['id']);
+    DB::getInstance()->QueryOne("delete from feedbacks where id=? limit 1", $feedback['id']);
 }
 
 ?>
 
 <span class="error"><?= implode('<br>', $errors) ?></span>
 <h1>Отзывы</h1>
-<table class="reviews-table">
+<table class="tbl_harakteristiki">
     <tr>
         <th>Автор</th>
         <th>Содержимое</th>

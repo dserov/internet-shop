@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="<?= WEB_ROOT . '/css/style.css' ?>">
 
     <title><?= $title ?></title>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 </head>
 <body>
 <div class="container">
@@ -48,11 +49,11 @@
                 <?php if ($_SESSION && $_SESSION['user_id']) { ?>
                     <div>
                         Вы вошли, как <span><?= $_SESSION['login'] ?></span>
-                        <a href="<?= WEB_ROOT ?>/index.php?page=logout">Выход</a>
+                        <a href="?page=personal_area">Личный кабинет</a>
                     </div>
                 <?php } ?>
                 <div>
-                    <?= readCart() ?>
+                    <?= $cartContent ?>
                 </div>
             </div>
         </div>
