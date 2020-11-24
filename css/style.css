@@ -161,7 +161,6 @@ table.tbl_harakteristiki td {
 .btn_kupit {
     margin-left: 50px;
     padding: 10px;
-    width: 150px;
     font-size: 2em;
     border-radius: 8px;
     background-color: #d89d00;
@@ -225,7 +224,7 @@ fieldset {
 
 .input_field input,
 textarea {
-    text-transform: capitalize;
+    /*text-transform: capitalize;*/
 }
 
 textarea {
@@ -304,6 +303,92 @@ input[type=reset] {
 
 .feedback-actions__panel {
     display: flex;
+}
+
+#loading-layer {
+    display: none;
+}
+
+#loading-layer > div {
+    font-family: "Verdana";
+    width: 200px;
+    height: 70px;
+    background-attachment: scroll;
+    background-repeat: repeat;
+    background-image: none;
+    background-position: 0 0;
+    background-size: auto;
+    background-origin: padding-box;
+    background-clip: border-box;
+    background-color: rgb(255, 255, 255);
+    padding: 10px;
+    text-align: center;
+    border: 1px solid rgb(0, 0, 0);
+    position: absolute;
+    z-index: 99;
+    left: 50%;
+    top: 50%;
+    margin: -25px 0 0 -100px;
+    font-weight: 900;
+    font-size: 13px;
+}
+
+/* Style for overlay and box */
+.overlay {
+    background-color: #0000004a;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+}
+
+#message-layer {
+    display: none;
+}
+#message-layer > div {
+    font-family: "Arial", "Verdana";
+    width: 40%;
+    /*    height: 50px;*/
+    background-attachment: scroll;
+    background-repeat: repeat;
+    background-image: none;
+    background-position: 0 0;
+    background-size: auto;
+    background-origin: padding-box;
+    background-clip: border-box;
+    padding: 20px;
+    text-align: center;
+    position: absolute;
+    z-index: 99;
+    left: 30%;
+    right: 30%;
+    top: 50%;
+}
+
+.errorbox {
+    border: 1px solid red;
+    background: #ffdddd;
+    font-weight: bold;
+    /*    font-size: 15px; */
+    color: #aa0000;
+    padding: 10px;
+    /*width: 100%;*/
+}
+
+.allokbox {
+    border: 1px solid #007E00;
+    background: #EFFFEF;
+    font-weight: bold;
+    /*    font-size: 15px; */
+    color: #007E00;
+    padding: 10px;
+    /*width: 100%;*/
+}
+
+#register-ok {
+    display: none;
 }
 
 @media screen and (max-width: 768px) {

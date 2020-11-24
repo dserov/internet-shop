@@ -1,8 +1,8 @@
 <?php
 $title = "Каталог товаров";
 
-$products = DB::getInstance()->QueryMany("SELECT * from products");
-if ($products) {
+$goods = DB::getInstance()->QueryMany("SELECT * from goods");
+if ($goods) {
     // массив массивов, где ключем будет код продукта, значение - массив фото
     $thumbnails = [];
     // нужно всего одно фото.
@@ -17,7 +17,7 @@ if ($products) {
 ?>
         <h1>Каталог</h1>
         <div class="tovar_list clearfix d-md-flex">
-            <?php foreach ($products as $product) { ?>
+            <?php foreach ($goods as $product) { ?>
                 <div class="card">
                     <a href="<?= "?page=goods_item&id=" . $product['id'] ?>">
                         <img class="card-img-top mt-3 mb-sm-3" src="<?=$thumbnails[$product['id']]['picture_path'] ?>" alt="<?= htmlspecialchars($product['name']) ?>" width="128" height="128">

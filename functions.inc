@@ -7,7 +7,7 @@
  */
 
 define('ROOT_DIR', $_SERVER['DOCUMENT_ROOT']);
-define('WEB_ROOT', '/internet-shop');
+define('WEB_ROOT', '');
 define('DS', DIRECTORY_SEPARATOR);
 
 define('THUMBNAIL_DIR', 'thumb' . DIRECTORY_SEPARATOR);
