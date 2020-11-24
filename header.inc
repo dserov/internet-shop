@@ -9,7 +9,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"/>
-    <link rel="stylesheet" href="<?= WEB_ROOT . '/css/style.css' ?>">
+    <link rel="stylesheet" href="css/font-awesome-5.7.2.min.css">
+    <link rel="stylesheet" href="css/style.css">
 
     <title><?= $title ?></title>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -46,14 +47,26 @@
                 </div>
             </nav>
             <div class="user_panel">
-                <?php if ($_SESSION && $_SESSION['user_id']) { ?>
+                <?php if (isAdmin()) { ?>
+                    <div>
+                        <a href="?page=goods">Товары</a>
+                        <a href="?page=orders">Стол заказов</a>
+                    </div>
+                    <div>
+                        Вы вошли, как <span><?= $_SESSION['login'] ?></span>
+                        <a href="?page=logout">Выход</a>
+                    </div>
+                <?php } elseif (isUser()) { ?>
                     <div>
                         Вы вошли, как <span><?= $_SESSION['login'] ?></span>
                         <a href="?page=personal_area">Личный кабинет</a>
                     </div>
+                    <div>
+                        <?php $goodsInCart = Cart::getInstance()->getGoodsInCart(); ?>
+                        <a href='?page=cart' title='Смотреть корзину'>В корзине</a>: <?= count($goodsInCart) ?> товаров
+                    </div>
+                <?php } else { ?>
+                    <span>Для покупок необходима <a href="?page=login">авторизация</a></span>
                 <?php } ?>
-                <div>
-                    <?= $cartContent ?>
-                </div>
             </div>
         </div>

@@ -2,11 +2,8 @@
 
 session_start();
 
-require_once 'db.inc';
 require_once 'functions.inc';
 require_once 'auth.inc';
-require_once 'AltoRouter.class.php';
-require_once 'cart_api.inc';
 
 //------------------------------------------------------------------------------
 
@@ -14,6 +11,11 @@ require_once 'cart_api.inc';
 //    header("Location: https://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']);
 //    exit;
 //}
+
+function my_class_loader ($class) {
+    include 'classes' . DIRECTORY_SEPARATOR . $class . '.class.php';
+};
+spl_autoload_register('my_class_loader');
 
 $response = array('result' => 0, 'errorMessage' => 'Не реализовано');
 $skipAuth = $_SERVER['REQUEST_URI'] === '/api.php/auth/register/';
@@ -29,8 +31,9 @@ try {
     $router = new AltoRouter();
     $router->setBasePath(WEB_ROOT . '/api.php');
 
-    $router->map("POST", "/cart/add/goods/",    "cartAddGoods");
-    $router->map("POST", "/cart/remove/goods/", "cartRemoveGoods");
+    $router->map("POST", "/cart/add/goods/",    "Cart::ajaxAddGoods");
+    $router->map("POST", "/cart/update/goods/", "Cart::ajaxAddGoods");
+    $router->map("POST", "/cart/remove/goods/", "Cart::ajaxRemoveGoods");
     $router->map("POST", "/auth/register/",     "authRegister");
 
     $match = $router->match();

@@ -7,11 +7,11 @@ class DB
     /**
      * @var $DBLink PDO
      */
-    var $DBLink = FALSE;
+    private $DBLink = FALSE;
     /**
      * @var DB $instance
      */
-    static $instance = null;
+    private static $instance = null;
 
     static function getInstance()
     {
