@@ -33,6 +33,7 @@ try {
 
     $router->map("POST", "/orders/create_from_cart/","Orders::ajaxCreateFromCart");
     $router->map("POST", "/orders/[i:order_id]/","Orders::ajaxGetOrder");
+    $router->map("POST", "/orders/[i:order_id]/update/","Orders::ajaxSaveUpdateOrder");
     $router->map("POST", "/cart/add/goods/",    "Cart::ajaxAddGoods");
     $router->map("POST", "/cart/update/goods/", "Cart::ajaxAddGoods");
     $router->map("POST", "/cart/remove/goods/", "Cart::ajaxRemoveGoods");

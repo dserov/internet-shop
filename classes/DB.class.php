@@ -100,7 +100,7 @@ class DB
     function QueryOne()
     {
         $args = func_get_args();
-        $result = call_user_func_array([$this->getInstance(), "QueryMany"], $args);
+        $result = $this->getInstance()->QueryMany(...$args);
         return is_array($result) ? current($result) : $result;
     }
 

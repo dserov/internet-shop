@@ -91,7 +91,7 @@ $goodsInCart = Cart::getInstance()->getGoodsInCartApplyDiscount(new Discount());
                 posting.fail(function () {
                     setTimeout(function () {
                         window.location.reload();
-                    }, 10000);
+                    }, 1000);
                 });
             }
         };

@@ -84,7 +84,7 @@ $orders = Orders::getInstance()->getOrders();
         <td>{%=o.quantity%}</td>
         <td>{%=o.price%}</td>
         <td>{%=o.discount%}</td>
-        <td>{%=o.itoog%}</td>
+        <td>{%=o.itogo%}</td>
         <td>{%=o.vsego%}</td>
     </tr>
 </script>
