@@ -1,6 +1,5 @@
 <?php
 
-
 class Cart
 {
     /**
@@ -14,6 +13,32 @@ class Cart
     function getGoodsInCart(): array
     {
         return $this->goodsInCart;
+    }
+
+    /**
+     * @param Discount $discount_instance
+     * @return array
+     */
+    function getGoodsInCartApplyDiscount(Discount $discount_instance = null): array
+    {
+        $this->reReadCart();
+
+//        throw new Exception(print_r($this->goodsInCart, true));
+
+        $data = [];
+        foreach ($this->goodsInCart as $good) {
+            $good['discountMessage'] = '';
+            $discount = 0;
+            if ($discount_instance) {
+                $discount = $discount_instance->checkDiscount($good['goods_id'], $good['discountMessage']);
+            }
+            $good['discount'] = round($good['price'] * $discount / 100, 2);
+            $good['itogo'] = $good['price'] - $good['discount'];
+            $good['vsego'] = round($good['itogo'] * $good['quantity'], 2);
+            $data[] = $good;
+        }
+        $this->goodsInCart = $data;
+        return $data;
     }
 
     /**
@@ -41,7 +66,7 @@ class Cart
 
     private function reReadCart()
     {
-        $this->goodsInCart = DB::getInstance()->QueryMany("SELECT g.id AS goods_id, g.name, g.price, c.quantity, c.user_id 
+        $this->goodsInCart = DB::getInstance()->QueryMany("SELECT c.id, c.goods_id, g.name, g.price, c.quantity, c.user_id 
         FROM cart c INNER JOIN goods g ON c.goods_id = g.id where c.user_id=?", $_SESSION['user_id']);
     }
 
@@ -58,8 +83,8 @@ class Cart
             throw new Exception('Количество указано неверно');
 
         // проверка наличия товара в корзине
-        $goodInCart = array_filter($this->goodsInCart, function ($item) {
-            return $item['user_id'] == $_SESSION['user_id'] && $item['goods_id'] == 2;
+        $goodInCart = array_filter($this->goodsInCart, function ($item) use ($product) {
+            return $item['user_id'] == $_SESSION['user_id'] && $item['goods_id'] == $product['id'];
         });
         $goodInCart = current($goodInCart);
         if ($goodInCart) {
@@ -67,8 +92,7 @@ class Cart
             if (!isset($data['action']) || $data['action'] != 'set') {
                 $data['quantity'] += $goodInCart['quantity'];
             }
-            DB::getInstance()->QueryOne("UPDATE cart SET quantity=? where goods_id=? and user_id=?",
-                $data['quantity'], $product['id'], $_SESSION['user_id']);
+            DB::getInstance()->QueryOne("UPDATE cart SET quantity=? where id=?", $data['quantity'], $goodInCart['id']);
         } else {
             DB::getInstance()->QueryOne("INSERT INTO cart (goods_id, user_id, quantity) values (?,?,?)",
                 $product['id'], $_SESSION['user_id'], $data['quantity']);
@@ -86,8 +110,7 @@ class Cart
             $json_data = file_get_contents("php://input");
             $data = json_decode($json_data, true);
 
-            $cart = Cart::getInstance();
-            $cart->addGoods($data);
+            Cart::getInstance()->addGoods($data);
 
             http_response(200, json_encode($response), 'application/json');
         } catch (Exception $e) {
@@ -116,8 +139,7 @@ class Cart
             $json_data = file_get_contents("php://input");
             $data = json_decode($json_data, true);
 
-            $cart = Cart::getInstance();
-            $cart->removeGoods($data);
+            Cart::getInstance()->removeGoods($data);
 
             http_response(200, json_encode($response), 'application/json');
         } catch (Exception $e) {

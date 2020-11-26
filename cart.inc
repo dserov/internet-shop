@@ -6,37 +6,22 @@
  * Time: 14:57
  */
 
-$goodsInCart = Cart::getInstance()->getGoodsInCart();
-$discount = checkDiscount();
-if ($discount) {
-    $data = [];
-    foreach ($goodsInCart as $good) {
-        $good['discount'] = round($good['price'] * $discount / 100, 2);
-        $good['itogo'] = $good['price'] - $good['discount'];
-        $good['vsego'] = round($good['itogo'] * $good['quantity'], 2);
-        $data[] = $good;
-    }
-    $goodsInCart = $data;
-}
-
-/**
- * проверка на скидку. Возвращает процент скидки
- *
- * @return int
- */
-function checkDiscount()
-{
-    return 5;
-}
-
+$goodsInCart = Cart::getInstance()->getGoodsInCartApplyDiscount(new Discount());
 ?>
 <h1>Корзина</h1>
 
+<div id="cart-message" class="cart-message">
+    <h3>Ваша заявка принята!</h3>
+    <p>Ожидайте звонка менеджера для подтвержения.</p>
+    <p>Ваши заявки и их статус отображаются в <a href="?page=personal_area">личном кабинете</a>.</p>
+    <p>Также проверьте адрес доставки.</p>
+    <p>Спасибо, что доверяете нам!</p>
+</div>
 <?php if (!$goodsInCart) { ?>
     <strong>Ваша корзина пуста</strong>
 <?php } else {
     $total = 0; ?>
-    <form action="tra-la-la">
+    <form id="create-order" action="tra-la-la">
         <table class="tbl_harakteristiki" id="cart-table">
             <thead>
             <tr>
@@ -93,21 +78,36 @@ function checkDiscount()
         let options = {
             minValue: 1,
             updateHandler: function () {
-                let data = {id_product: 0, quantity: parseInt(this.val())};
                 let $tr = this.closest('tr');
-                data.id_product = $tr.data('product-id');
-                data.action = 'set'; // флаг установки(!) количества
-                $.post("api.php/cart/update/goods/",
+                let data = {id_product: $tr.data('product-id'), quantity: parseInt(this.val()), action: "set"}; // флаг установки(!) количества
+                let posting = $.post("api.php/cart/update/goods/",
                     JSON.stringify(data),
                     function (otvet, textStatus, jqXHR) {
                         // пересчет строк таблицы
                         recalcCart();
-                        show_message('Сохранено', 'true');
+//                        show_message('Сохранено', 'true');
                     }
-                )
+                );
+                posting.fail(function () {
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 10000);
+                });
             }
         };
         makeSpinner('input.cart-quantity', options);
+
+        $(document).on("submit", "#create-order", function (e) {
+            e.preventDefault();
+            if (!confirm("Создать заказ?")) return;
+            $.post("api.php/orders/create_from_cart/",
+                JSON.stringify({}),
+                function (otvet, textStatus, jqXHR) {
+                    $('#create-order').fadeOut();
+                    $('.cart-message').fadeIn();
+                }
+            );
+        });
     });
 
     function recalcCart() {
@@ -116,7 +116,7 @@ function checkDiscount()
         $.each($trList, function (idx, tr) {
             itogo = parseFloat($(tr).find('.cart-itogo').text());
             quantity = parseInt($(tr).find('.cart-quantity').val());
-            $(tr).find('.cart-quantity').text((itogo*quantity).toFixed(2));
+            $(tr).find('.cart-vsego').text((itogo * quantity).toFixed(2));
             totalSumma += itogo * quantity;
         });
         $('.cart-total').text(totalSumma.toFixed(2));

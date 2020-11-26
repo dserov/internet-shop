@@ -104,6 +104,10 @@ class DB
         return is_array($result) ? current($result) : $result;
     }
 
+    function LastInsertId() {
+        return $this->getInstance()->DBLink->lastInsertId();
+    }
+
     /**
      *  запрос с подстановками приводит к простому текстовому виду
      *  представляет из себя основной запрос. после него может идти еще любое количество параметров для подстановки
@@ -137,5 +141,13 @@ class DB
         }
 
         return $result;
+    }
+
+    function StartTransaction() {
+        if (!$this->getInstance()->DBLink->inTransaction()) $this->getInstance()->DBLink->beginTransaction();
+    }
+
+    function CommitTransaction() {
+        if ($this->getInstance()->DBLink->inTransaction()) $this->getInstance()->DBLink->commit();
     }
 }
