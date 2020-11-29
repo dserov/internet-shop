@@ -1,5 +1,12 @@
 <?php
 $title = "Список товаров";
+
+// дальше для админа
+if (!isAdmin()) {
+    ?><h1>Эта страница для админа!</h1><?php
+    return;
+}
+
 $errors = [];
 
 $goods_item = [];
@@ -35,11 +42,6 @@ function doGoodsItemAction(&$goods_item)
                 exit;
             }
             return '';
-        }
-
-// дальше для админа
-        if (!isAdmin()) {
-            throw new Exception('Это действие только для админа');
         }
 
         if ($goods_item['action'] == 'delete') {
@@ -159,6 +161,7 @@ function goodsItemDelete($goods_item)
                                                                            value="<?= $row['id'] ?>">
                             <button type="submit" name="action" value="edit" title="Изменить товар">Изменить</button>&nbsp;
                         </form>
+                        <a href="<?= '?page=photo&product_id=' ?><?= $row['id'] ?>">Фотогалерея</a>
                     </td>
                 <?php } ?>
             </tr>

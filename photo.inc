@@ -2,6 +2,12 @@
 
 $title = "Фотогалерея товара";
 
+// дальше для админа
+if (!isAdmin()) {
+    ?><h1>Эта страница для админа!</h1><?php
+    return;
+}
+
 $errors = [];
 $uploadDir = 'foto' . DIRECTORY_SEPARATOR;
 
@@ -11,6 +17,31 @@ $product = DB::getInstance()->QueryOne("SELECT * FROM goods WHERE id=?", $produc
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_FILES) {
     processFiles($productId, $uploadDir, $errors);
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['delete_id'])) {
+    deletePicture($_GET['delete_id'], $errors);
+}
+
+/**
+ * Удаление картиинки из галереи ииз файловой системы
+ *
+ * @param $picture_id
+ * @param $uploadDir
+ * @param $errors
+ */
+function deletePicture($picture_id, $errors)
+{
+    try {
+        $picture = DB::getInstance()->QueryOne("SELECT * from pictures where id=?", $picture_id);
+        if (!$picture) throw new Exception("Картинка по коду не найдена!");
+        unlink($picture['path'] . DIRECTORY_SEPARATOR . $picture['name']);
+        unlink($picture['path'] . THUMBNAIL_DIR . $picture['name']);
+        $fullImageFile = $picture['path'] . DIRECTORY_SEPARATOR . $picture['name'];
+        DB::getInstance()->QueryOne("DELETE FROM pictures where id=? limit 1", $picture['id']);
+    } catch (Exception $exception) {
+        $errors[] = $exception->getMessage();
+    }
 }
 
 function processFiles($productId, $uploadDir, &$errors)
@@ -160,24 +191,24 @@ function readGallery(&$errors, $productId)
 
         // из путей сделаем ссылки
         $thumbImageFile = str_replace(DIRECTORY_SEPARATOR, '/', $thumbImageFile);
-        echo sprintf('<a class="gallery-link" data-fancybox="gallery" href="?show=%d">
+        echo sprintf('<div class="foto-wrapper"><a class="gallery-link" data-fancybox="gallery" href="%s">
             <img class="gallery-img" src="%s" width="%d" height="%d" alt="%s">
-            <p>Просмотров: %d</p>
-            <p>Размер: %s</p></a>',
-            $picture['id'], $thumbImageFile, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT,
-            $picture['alt'], $picture['click'], formatBytes($picture['size']));
+            <p>Размер: %s</p>
+            </a><a href="?page=photo&delete_id=%d&product_id=%d" class=".photo-delete" title="Удалить картинку">Удалить</a></div>',
+            $fullImageFile, $thumbImageFile, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT,
+            $picture['alt'], formatBytes($picture['size']), $picture['id'], $productId);
     }
 }
 
 ?>
 <h1>Фотогалерея продукта</h1>
-<h3><?= $product['name']?></h3>
+<h3><a href="?page=goods_item&id=<?= $productId ?>"><?= $product['name'] ?></a></h3>
 <div class="clearfix"></div>
 *Первая картинка станет главным изображением товара
 <div class="photo-gallery">
-<?php if ($productId) {
-    readGallery($errors, $productId);
-} else { ?>Код товара не задан<?php } ?>
+    <?php if ($productId) {
+        readGallery($errors, $productId);
+    } else { ?>Код товара не задан<?php } ?>
 </div>
 <?php if ($errors) echo '<div class="error-list">' . implode('<br>', $errors) . '</div>' ?>
 <form method="post" action="?page=photo&product_id=<?= $productId ?>" enctype="multipart/form-data">

@@ -72,11 +72,7 @@ function showGallery($photos)
     <?php } ?>
 <?php } ?>
 <div class="clearfix"></div>
-<h3 class="karto4ka_tovara">Фотогалерея
-    <?php if (isAdmin()) { ?>
-        <a href="<?= '?page=photo&product_id=' ?><?= $product['id'] ?>">Редактировать</a>
-    <?php } ?>
-</h3>
+<h3 class="karto4ka_tovara">Фотогалерея</h3>
 <?php showGallery($photos) ?>
 <h3 class="karto4ka_tovara">Характеристики товара</h3>
 <?= $product['property'] ?>

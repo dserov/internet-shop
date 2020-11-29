@@ -2,7 +2,6 @@
 
 session_start();
 
-require_once 'db.inc';
 require_once 'functions.inc';
 require_once 'auth.inc';
 
@@ -10,6 +9,11 @@ require_once 'auth.inc';
 //    header("Location: https://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']);
 //    exit;
 //}
+
+function my_class_loader ($class) {
+    include 'classes' . DIRECTORY_SEPARATOR . $class . '.class.php';
+};
+spl_autoload_register('my_class_loader');
 
 $title = 'Главная страница';
 $page = isset($_GET['page']) ? $_GET['page'] : '';
@@ -68,23 +72,14 @@ switch ($page) {
     case 'personal_area':
         include 'personal_area.inc';
         break;
+    case 'orders':
+        include 'orders.inc';
+        break;
     default:
         include 'main_page.inc';
 }
 
 $content = ob_get_clean();
-
-// пришлось сюда сунуть чтение корзины. В идеале сделать синглтоном тоже, как и операции с БД
-$cartContent = readCart();
-function readCart() {
-    if (! (isUser() || isAdmin())) {
-        return 'Для покупок необходима <a href="?page=login">авторизация</a>';
-    }
-
-    $goodsInCart = DB::getInstance()->QueryMany("SELECT g.id AS goods_id, g.name, SUM(g.price) AS summa, SUM(c.quantity) quantity 
-        FROM cart c INNER JOIN goods g ON c.goods_id = g.id where c.user_id=? GROUP BY g.id", $_SESSION['user_id']);
-    return "<a href='?page=cart' title='Смотреть корзину'>В корзине</a>: " . count($goodsInCart) . " товаров";
-}
 
 include 'header.inc';
 echo $content;

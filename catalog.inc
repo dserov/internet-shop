@@ -30,5 +30,4 @@ if ($goods) {
                 </div>
             <?php } ?>
         </div>
-        <?php if (isAdmin()) echo '<a href="?page=goods_item">Добавить новый товар</a>' ?>
 

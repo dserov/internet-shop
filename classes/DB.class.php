@@ -7,11 +7,11 @@ class DB
     /**
      * @var $DBLink PDO
      */
-    var $DBLink = FALSE;
+    private $DBLink = FALSE;
     /**
      * @var DB $instance
      */
-    static $instance = null;
+    private static $instance = null;
 
     static function getInstance()
     {
@@ -100,8 +100,12 @@ class DB
     function QueryOne()
     {
         $args = func_get_args();
-        $result = call_user_func_array([$this->getInstance(), "QueryMany"], $args);
+        $result = $this->getInstance()->QueryMany(...$args);
         return is_array($result) ? current($result) : $result;
+    }
+
+    function LastInsertId() {
+        return $this->getInstance()->DBLink->lastInsertId();
     }
 
     /**
@@ -137,5 +141,13 @@ class DB
         }
 
         return $result;
+    }
+
+    function StartTransaction() {
+        if (!$this->getInstance()->DBLink->inTransaction()) $this->getInstance()->DBLink->beginTransaction();
+    }
+
+    function CommitTransaction() {
+        if ($this->getInstance()->DBLink->inTransaction()) $this->getInstance()->DBLink->commit();
     }
 }

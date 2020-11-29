@@ -2,28 +2,27 @@
 /**
  * Created by PhpStorm.
  * User: MegaVolt
- * Date: 21.11.2020
- * Time: 22:24
+ * Date: 23.11.2020
+ * Time: 14:02
  */
 
-$user = DB::getInstance()->QueryOne("select * from users where id=?", $_SESSION['user_id']);
+// дальше для админа
+if (!isAdmin()) {
+    ?><h1>Эта страница для админа!</h1><?php
+    return;
+}
+
 $orders = Orders::getInstance()->getOrders();
+$order_status = DB::getInstance()->QueryMany("SELECT * FROM order_status");
 ?>
-<h1>Личный кабинет</h1>
-
-<p>Приветствую вас, <?= $user['fio'] ?>!</p>
-<p>Ваш логин в системе - <?= $user['login'] ?></p>
-
-<p>Вы можете <a href="?page=logout" title="Выйти из системы">выйти</a></p>
-
-<h2>Ваши заказы</h2>
-
+<h1>Стол заказов</h1>
 <?php if (!$orders) { ?>
-    <strong>Заказов пока нет... Не теряйте времени, заказывайте!</strong>
+    <strong>Заказов пока нет...</strong>
 <?php } else { ?>
     <table class="tbl_harakteristiki" id="user-orders-table">
         <thead>
         <tr>
+            <th>Логин<br>пользователя</th>
             <th>Номер</th>
             <th>Дата-время</th>
             <th>Сумма</th>
@@ -34,10 +33,16 @@ $orders = Orders::getInstance()->getOrders();
         <tbody>
         <?php foreach ($orders as $order) { ?>
             <tr>
+                <td><?= $order['user_login'] ?></td>
                 <td><?= $order['id'] ?></td>
                 <td><?= $order['order_date'] ?></td>
                 <td><?= sprintf("%.2f", $order['vsego']) ?></td>
-                <td title="<?= $order['description'] ?>"><?= $order['status_name'] ?></td>
+                <td><select class="order-status" data-order-id="<?= $order['id'] ?>">
+                        <?php foreach ($order_status as $status) {
+                            $selected = ($order['status_id'] == $status['id'] ? 'selected' : ''); ?>
+                            <option value="<?= $status['id'] ?>" <?= $selected ?>><?= $status['name'] ?></option>
+                        <?php } ?>
+                    </select></td>
                 <td>
                     <button class="show-order-detail" data-order-id="<?= $order['id'] ?>">Состав заказа</button>
                 </td>
@@ -87,6 +92,7 @@ $orders = Orders::getInstance()->getOrders();
         <td>{%=o.itogo%}</td>
         <td>{%=o.vsego%}</td>
     </tr>
+
 </script>
 <script type="text/javascript">
     $(document).ready(function (e) {
@@ -113,6 +119,21 @@ $orders = Orders::getInstance()->getOrders();
                     $('#order-detail').modal();
                 }
             );
+        })
+        $(document).on('change', '.order-status', function (e) {
+            let order_id = $(this).data('order-id');
+            let status_id = parseInt($(this).val());
+            let posting = $.post("api.php/orders/" + order_id + "/update/",
+                JSON.stringify({status_id: status_id}),
+                function (otvet, textStatus, jqXHR) {
+                    show_message('Сохранено', 'true');
+                }
+            );
+            posting.fail(function () {
+                setTimeout(function () {
+                    window.location.reload();
+                }, 1000);
+            });
         })
     })
 </script>

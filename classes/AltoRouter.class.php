@@ -16,7 +16,7 @@ class AltoRouter {
 	/**
 	 * @var array Array of all routes (incl. named routes).
 	 */
-	protected $routes = array();
+	protected $routes = [];
 
 	/**
 	 * @var array Array of all named routes.
